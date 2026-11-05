@@ -1,3 +1,4 @@
+import os
 from pypdf import PdfReader , PdfWriter
 
 #Take PDF file paths from the user
@@ -13,14 +14,19 @@ writer = PdfWriter()
 for file in pdf_files:
     file = file.strip()
 
-    pdf = PdfReader(file)
+    #Check whether the file exists
+    if os.path.exists(file):
+        # Read the PDF file
+        pdf = PdfReader(file)
 
-    print(file, "total pages: ",len(pdf.pages))
+        print(file, "total pages: ", len(pdf.pages))
 
-    #Add pages to the writer
-    for page in pdf.pages:
-      writer.add_page(page)
+        #Add pages to the writer
+        for page in pdf.pages:
+            writer.add_page(page)
 
+    else:
+        print("File not found: ", file)
 #Save the merged PDF
 with open("output/merged.pdf", "wb") as output_file:
    writer.write(output_file)
