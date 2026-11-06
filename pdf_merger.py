@@ -82,7 +82,19 @@ def merge_pdfs(pdf_files, output_path):
         if os.path.exists(file):
 
             try:
+                # Read the PDF file
                 pdf = PdfReader(file)
+
+                # Check whether PDF is password protected
+                if pdf.is_encrypted:
+
+                    password = input(f"Enter password for {file}: ")
+
+                    result = pdf.decrypt(password)
+
+                    if not result:
+                        print("Incorrect password. Skipping:", file)
+                        continue
 
                 print(file, "total pages:", len(pdf.pages))
 
@@ -100,8 +112,10 @@ def merge_pdfs(pdf_files, output_path):
     if len(writer.pages) > 0:
 
         try:
+            # Create output folder if it doesn't exist
             os.makedirs("output", exist_ok=True)
 
+            # Save the merged PDF
             with open(output_path, "wb") as output_file:
                 writer.write(output_file)
 
@@ -132,6 +146,7 @@ def main():
     # Get output filename
     output_path = get_output_path()
 
+    # Merge PDF files
     if output_path is not None:
         merge_pdfs(pdf_files, output_path)
     else:
