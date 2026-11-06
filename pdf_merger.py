@@ -7,6 +7,19 @@ pdf_files = input("Enter PDF file paths separated by commas: ")
 # Convert input into a list
 pdf_files = pdf_files.split(",")
 
+# Take output filename from the user
+output_name = input("Enter output filename: ")
+
+# Remove extra spaces
+output_name = output_name.strip()
+
+# Add .pdf extension if not already present
+if not output_name.endswith(".pdf"):
+    output_name += ".pdf"
+
+# Create output file path
+output_path = os.path.join("output", output_name)
+
 # Create a PDF writer object
 writer = PdfWriter()
 
@@ -37,11 +50,11 @@ for file in pdf_files:
 if len(writer.pages) > 0:
 
     # Save the merged PDF
-    with open("output/merged.pdf", "wb") as output_file:
+    with open(output_path, "wb") as output_file:
         writer.write(output_file)
 
     print("PDFs merged successfully!")
-    print("Merged PDF saved in output/merged.pdf")
+    print("Merged PDF saved in", output_path)
 
 else:
     print("No valid PDF pages found. Nothing to merge.")
