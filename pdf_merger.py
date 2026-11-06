@@ -7,6 +7,12 @@ def get_pdf_files():
 
     pdf_files = input("Enter PDF file paths separated by commas: ")
 
+    pdf_files = pdf_files.strip()
+
+    if not pdf_files:
+        print("PDF file paths cannot be empty.")
+        return None
+
     # Convert input into a list
     pdf_files = pdf_files.split(",")
 
@@ -20,6 +26,10 @@ def get_output_path():
 
     # Remove extra spaces
     output_name = output_name.strip()
+
+    if not output_name:
+        print("Filename cannot be empty.")
+        return None
 
     # Add .pdf extension if not present
     if not output_name.lower().endswith(".pdf"):
@@ -97,6 +107,10 @@ def main():
 
     # Get PDF file paths
     pdf_files = get_pdf_files()
+
+    if pdf_files is None:
+        print("PDF merging cancelled.")
+        return
 
     # Get output filename
     output_path = get_output_path()
