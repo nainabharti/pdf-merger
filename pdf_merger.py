@@ -94,6 +94,7 @@ def merge_pdfs(pdf_files, output_path):
 
             print("\nPDFs merged successfully!")
             print("Merged PDF saved in", output_path)
+            print("Total pages in merged PDF:", len(writer.pages))
 
         except Exception as error:
             print("Could not save the merged PDF:", error)
