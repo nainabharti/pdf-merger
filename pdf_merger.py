@@ -6,7 +6,6 @@ from pypdf import PdfReader, PdfWriter
 def get_pdf_files():
 
     pdf_files = input("Enter PDF file paths separated by commas: ")
-
     pdf_files = pdf_files.strip()
 
     if not pdf_files:
@@ -23,8 +22,6 @@ def get_pdf_files():
 def get_output_path():
 
     output_name = input("Enter output filename: ")
-
-    # Remove extra spaces
     output_name = output_name.strip()
 
     if not output_name:
@@ -40,7 +37,7 @@ def get_output_path():
 
     # Check if the output file already exists
     if os.path.exists(output_path):
-        choice = input("File already exists, Overwrite? (y/n): ")
+        choice = input("File already exists. Overwrite? (y/n): ")
         choice = choice.strip().lower()
 
         if choice == "y":
@@ -51,10 +48,29 @@ def get_output_path():
     return output_path
 
 
-# 3. Function to merge PDF files
+# 3. Function to remove duplicate PDF paths
+def remove_duplicates(pdf_files):
+
+    unique_files = []
+    seen_files = set()
+
+    for file in pdf_files:
+
+        file = file.strip()
+
+        if file not in seen_files:
+            unique_files.append(file)
+            seen_files.add(file)
+
+        else:
+            print("Duplicate file skipped:", file)
+
+    return unique_files
+
+
+# 4. Function to merge PDF files
 def merge_pdfs(pdf_files, output_path):
 
-    # Create a PDF writer object
     writer = PdfWriter()
 
     # Process each PDF file
@@ -66,7 +82,6 @@ def merge_pdfs(pdf_files, output_path):
         if os.path.exists(file):
 
             try:
-                # Read the PDF file
                 pdf = PdfReader(file)
 
                 print(file, "total pages:", len(pdf.pages))
@@ -85,10 +100,8 @@ def merge_pdfs(pdf_files, output_path):
     if len(writer.pages) > 0:
 
         try:
-            # Create output folder if it doesn't exist
             os.makedirs("output", exist_ok=True)
 
-            # Save the merged PDF
             with open(output_path, "wb") as output_file:
                 writer.write(output_file)
 
@@ -103,7 +116,7 @@ def merge_pdfs(pdf_files, output_path):
         print("\nNo valid PDF pages found. Nothing to merge.")
 
 
-# 4. Main function
+# 5. Main function
 def main():
 
     # Get PDF file paths
@@ -113,10 +126,12 @@ def main():
         print("PDF merging cancelled.")
         return
 
+    # Remove duplicate PDF paths
+    pdf_files = remove_duplicates(pdf_files)
+
     # Get output filename
     output_path = get_output_path()
 
-    # Merge PDF files
     if output_path is not None:
         merge_pdfs(pdf_files, output_path)
     else:
