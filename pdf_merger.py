@@ -28,6 +28,16 @@ def get_output_path():
     # Create output path
     output_path = os.path.join("output", output_name)
 
+    # Check if the output file already exists
+    if os.path.exists(output_path):
+        choice = input("File already exists, Overwrite? (y/n): ")
+        choice = choice.strip().lower()
+
+        if choice == "y":
+            return output_path
+        else:
+            return None
+
     return output_path
 
 
@@ -92,7 +102,10 @@ def main():
     output_path = get_output_path()
 
     # Merge PDF files
-    merge_pdfs(pdf_files, output_path)
+    if output_path is not None:
+        merge_pdfs(pdf_files, output_path)
+    else:
+        print("PDF merging cancelled.")
 
 
 # Main program execution
